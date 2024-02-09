@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+
 	// Initialize the application's bootstrap components.
 	app := bootstrap.NewInitializeBootsrap()
 
@@ -28,6 +29,7 @@ func main() {
 	// Create a wrapper for the controller interfaces.
 	wrapper := &handlers.ServerInterfaceWrapper{
 		CheckHandler: checkController,
+		TimescaleDB:  app.TimescaleDB,
 	}
 
 	// Register API handlers.

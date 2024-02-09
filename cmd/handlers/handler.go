@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"fmt"
-	"oapi-codegen-cultibio/api"
 	"oapi-codegen-cultibio/bootstrap"
 	"oapi-codegen-cultibio/controller"
+	"oapi-codegen-cultibio/dal"
+	"oapi-codegen-cultibio/models"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -24,12 +24,13 @@ func NewServiceInitial(app bootstrap.Application) MyHandler {
 // ServerInterfaceWrapper wraps controller interfaces.
 type ServerInterfaceWrapper struct {
 	CheckHandler controller.ICheckController
+	TimescaleDB  *dal.TimescaleDB
 }
 
 // AddSensorData implements api.ServerInterface.
 func (h *ServerInterfaceWrapper) AddSensorData(c *fiber.Ctx) error {
 	// Parse the request body into a SensorData object
-	var requestData api.SensorData
+	var requestData models.SensorData
 	if err := c.BodyParser(&requestData); err != nil {
 		// Handle parsing error
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -37,16 +38,20 @@ func (h *ServerInterfaceWrapper) AddSensorData(c *fiber.Ctx) error {
 		})
 	}
 
-	// Do something with the parsed data
-	// For example, print the received values
-	fmt.Printf("Received SensorID: %v, Timestamp: %v, Value: %v\n",
-		requestData.SensorID, requestData.Timestamp, requestData.Value)
+	// Store the received sensor data in TimescaleDB
+	err := h.TimescaleDB.AddSensorData(requestData)
+	if err != nil {
+		// Handle database storage error
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to store sensor data in the database",
+		})
+	}
 
 	// You can now use the requestData values as needed in your application logic
 
 	// Return a response if necessary
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Sensor data received successfully",
+		"message": "Sensor data received and stored successfully",
 		"data":    requestData,
 	})
 }

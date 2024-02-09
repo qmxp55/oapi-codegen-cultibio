@@ -11,21 +11,16 @@ import (
 	"net/url"
 	"path"
 	"strings"
-	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gofiber/fiber/v2"
+	"oapi-codegen-cultibio/models"
 )
 
-// SensorData defines model for SensorData.
-type SensorData struct {
-	SensorID  *int       `json:"SensorID,omitempty"`
-	Timestamp *time.Time `json:"Timestamp,omitempty"`
-	Value     *float32   `json:"Value,omitempty"`
-}
+
 
 // AddSensorDataJSONRequestBody defines body for AddSensorData for application/json ContentType.
-type AddSensorDataJSONRequestBody = SensorData
+type AddSensorDataJSONRequestBody = models.SensorData
 
 // GlobalResponses defines the response model for the global responses.
 type GlobalResponses struct {

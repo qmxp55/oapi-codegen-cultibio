@@ -1,0 +1,9 @@
+# config.yaml
+
+timescaleDB:
+  host: aws-0-us-west-1.pooler.supabase.com        # Database host
+  port: 5432             # Database port
+  user: postgres.hzujcysmgrhxpduryllw        # Database username
+  password: dne3UTD*mtj@vwr3mrz # Database password
+  database: postgres      # Database name
+  ssl_mode: disable      # SSL mode (modify based on your security requirements)
